@@ -47,19 +47,18 @@ dataEcho = None
 attempts = 0
 
 while attempts < 3:
-    print("Sending Data To {}, {}: {} ( {} character(s) )".format(HOST, PORT, DATA, DATA_LENGTH))
+    print("Sending Data To\t\t{}, {}: {} ( {} character(s) )".format(HOST, PORT, DATA, DATA_LENGTH))
     clientSocket.sendto(DATA.encode(), (HOST, PORT))
 
     try:
         dataEcho, address = clientSocket.recvfrom(DATA_LENGTH)
     except OSError:
-        pass
-
-    if dataEcho is not None:
-        break
-        print("Received Data From {}, {}: {}".format(HOST, PORT, DATA))
-    else:
         attempts += 1
         print("Message Timed Out")
+        continue
+
+    print("Received Data From\t{}, {}: {}".format(HOST, PORT, DATA))
+    break
+
 
 clientSocket.close()
