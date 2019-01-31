@@ -1,9 +1,6 @@
 #   Client/Server Socket Interaction in UDP
 #
 #   Author: Braulio Tonaco
-#   UCID:   bt74
-#   Date:   01/27/19
-#   Class:  CS356 - Wednesday 6pm to 9pm
 #
 #   Using UDP sockets, you will write a client and server program that enables the client to send a string of some
 #   specified length to the server over the network, and the server simply echoes back that string back to the client.
