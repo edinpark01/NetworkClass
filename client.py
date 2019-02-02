@@ -57,7 +57,7 @@ while attempts < 3:
         print("Message Timed Out")
         continue
 
-    print("Received Data From\t{}, {}: {}".format(HOST, PORT, DATA))
+    print("Received Data From\t{}, {}: {}".format(HOST, PORT, dataEcho.decode()))
     break
 
 
