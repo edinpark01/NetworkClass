@@ -61,15 +61,15 @@ client_socket = socket(AF_INET, SOCK_DGRAM)
 # STEP 3: Sets timeout time (1 for one second)
 client_socket.settimeout(1)
 
-format_string = "!ii"
-
+times = []
 print("Pinging {}, {}".format(args['HOST'], args['PORT']))
 
 # STEP 4: Send 10 ping requests consecutively to the server running at the specified IP address and port
 for msg_num in range(1, 11):
     # STEP 4.0: Pack and Encode data
-    PACKED = struct.pack(format_string, args['MSG_TYPE'], int(msg_num))
-    DATA_LEN = sys.getsizeof(PACKED)
+    PACKED = struct.pack("ii", args['MSG_TYPE'], int(msg_num))
+    #DATA_LEN = 16
+    DATA_LEN = struct.calcsize("ii")
 
     # STEP 4.1: Start timer
     start = time.time()
@@ -87,10 +87,28 @@ for msg_num in range(1, 11):
     # STEP 4.4: Record End + calculate RTT
     end = time.time()
     RTT = end - start
+    times.append(RTT)
 
     # STEP 4.5: Trace Output
     print("Ping message number {} RTT: {} secs".format(msg_num, RTT))
 
-    # unpacked = struct.unpack(format_string, data_echoed)
 
+# STEP 5: Calculate and output stats
+packets_sent = 10
+packets_lost = packets_sent - len(times)
+min_RTT = min(times)
+max_RTT = max(times)
 
+sum_RTT = 0
+for time in times:
+    sum_RTT += time
+
+avg_RTT = sum_RTT / len(times)
+
+# STEP 6: Print stats
+print("Number of packets sent:", packets_sent)
+print("Number of packets lost:", packets_lost)
+print("Percentage loss", packets_lost / 10.0)
+print("Min RTT:", min_RTT)
+print("Max RTT:", max_RTT)
+print("Average RTT:", avg_RTT)

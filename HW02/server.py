@@ -1,6 +1,6 @@
 #   Client/Server Socket Interaction in UDP
 #   Author: Braulio Tonaco
-#   Date:   01/27/19
+#   Date:   02/09/19
 #
 #   The server program should take the following command-line parameters:
 #       •	IP address that server listens on (127.0.0.1 will be used to test the program)
@@ -14,7 +14,7 @@
 #                   contents of the data received
 #               •	A message when data is sent back to the client indicating destination IP address and port
 
-import sys
+import sys, random, struct
 from socket import *
 
 argv = sys.argv
@@ -35,8 +35,18 @@ while True:
     # Receive and print the client data from "data" socket
     data, address = serverSocket.recvfrom(dataLEN)
 
-    print("Receive data from client\t" + address[0] + ", " + str(address[1]) + ": " + data.decode())
-    print("Sending data to client\t\t" + address[0] + ", " + str(address[1]) + ": " + data.decode())
+    # Unpack received data
+    msg, seq = struct.unpack("ii", data)
 
-    # Echo back to client
-    serverSocket.sendto(data, address)
+    # Get random #
+    rdm_num = random.randint(0, 10)
+
+    if rdm_num < 4:
+        print("Message with sequence number {} dropped".format(seq))
+        continue
+    else:
+
+        print("Responding to ping request with sequence number {}".format(seq))
+        # Echo back to client
+        packed_data = struct.pack("ii", 2, seq)
+        serverSocket.sendto(packed_data, address)
