@@ -28,25 +28,16 @@ dataLEN = 1000000
 serverSocket = socket(AF_INET, SOCK_DGRAM)
 serverSocket.bind((serverIP, serverPORT))
 
-print('The server is ready to receive on port: {}'.format(serverPORT))
+print('The server is ready to receive on port: {}\n\n'.format(serverPORT))
 
-# loop forever listening for incoming datagram messages
 while True:
-    # Receive and print the client data from "data" socket
     data, address = serverSocket.recvfrom(dataLEN)
-
-    # Unpack received data
     msg, seq = struct.unpack("ii", data)
 
-    # Get random #
-    rdm_num = random.randint(0, 10)
-
-    if rdm_num < 4:
+    if random.randint(0, 10) < 4:
         print("Message with sequence number {} dropped".format(seq))
-        continue
     else:
-
         print("Responding to ping request with sequence number {}".format(seq))
-        # Echo back to client
+
         packed_data = struct.pack("ii", 2, seq)
-        serverSocket.sendto(packed_data, address)
+        serverSocket.sendto(packed_data, address)  # Echo response back to client

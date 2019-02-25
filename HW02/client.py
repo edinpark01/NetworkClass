@@ -52,63 +52,55 @@ def get_arguments():
 
     return arguments
 
-# STEP 1: The client program will read in the above input parameters
+
 args = get_arguments()
-
-# STEP 2: Setup UDP protocol
 client_socket = socket(AF_INET, SOCK_DGRAM)
-
-# STEP 3: Sets timeout time (1 for one second)
 client_socket.settimeout(1)
 
 times = []
 print("Pinging {}, {}".format(args['HOST'], args['PORT']))
 
-# STEP 4: Send 10 ping requests consecutively to the server running at the specified IP address and port
 for msg_num in range(1, 11):
-    # STEP 4.0: Pack and Encode data
-    PACKED = struct.pack("ii", args['MSG_TYPE'], int(msg_num))
-    #DATA_LEN = 16
-    DATA_LEN = struct.calcsize("ii")
+    PACKET = struct.pack("ii", args['MSG_TYPE'], int(msg_num))
+    DATA_LEN = struct.calcsize("ii")  # DATA_LEN = 16
 
-    # STEP 4.1: Start timer
     start = time.time()
+    client_socket.sendto(PACKET, (args['HOST'], args['PORT']))
 
-    # STEP 4.1: Sends request to server
-    client_socket.sendto(PACKED, (args['HOST'], args['PORT']))
-
-    # STEP 4.2: Wait for a response each time.
     try:
         data_echoed, address = client_socket.recvfrom(DATA_LEN)
     except OSError:
         print("Ping message number {} timed out".format(msg_num))
         continue
 
-    # STEP 4.4: Record End + calculate RTT
     end = time.time()
     RTT = end - start
     times.append(RTT)
 
-    # STEP 4.5: Trace Output
     print("Ping message number {} RTT: {} secs".format(msg_num, RTT))
 
 
-# STEP 5: Calculate and output stats
-packets_sent = 10
-packets_lost = packets_sent - len(times)
-min_RTT = min(times)
-max_RTT = max(times)
-
-sum_RTT = 0
-for time in times:
-    sum_RTT += time
-
-avg_RTT = sum_RTT / len(times)
-
-# STEP 6: Print stats
-print("Number of packets sent:", packets_sent)
-print("Number of packets lost:", packets_lost)
-print("Percentage loss", packets_lost / 10.0)
-print("Min RTT:", min_RTT)
-print("Max RTT:", max_RTT)
-print("Average RTT:", avg_RTT)
+# # STEP 5: Calculate and output stats
+# packets_sent = 10
+# packets_lost = packets_sent - len(times)
+# min_RTT = min(times)
+# max_RTT = max(times)
+#
+# sum_RTT = 0
+# for time in times:
+#     sum_RTT += time
+#
+# avg_RTT = sum_RTT / len(times)
+#
+# # STEP 6: Print stats
+# print("Number of packets sent:", packets_sent)
+# print("Number of packets lost:", packets_lost)
+# print("Percentage loss", packets_lost / 10.0)
+# print("Min RTT:", min_RTT)
+# print("Max RTT:", max_RTT)
+# print("Average RTT:", avg_RTT)
+#
+#
+# def test_func(arg1, arg2):
+#     print(arg1)
+#     print(arg2)
