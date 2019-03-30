@@ -14,6 +14,12 @@ OS: MacOS - Mojave
 PyCharm
 
 **Entry files & command:**
-<br>client.py ``` python3 client.py 127.0.0.1 12000 ```
-<br>server.py ``` python3 server.py 127.0.0.1 ```
+<br>client.py 
+``` 
+python3 client.py 127.0.0.1 12000 
+```
+<br>server.py 
+```
+python3 server.py 127.0.0.1 12000
+```
  
